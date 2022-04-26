@@ -6,16 +6,6 @@ const Header = (props) => {
   );
 };
 
-const Part = (props) => {
-  return (
-    <div>
-      <p>
-        {props.title} {props.numOfExercises}
-      </p>
-    </div>
-  );
-};
-
 const Total = (props) => {
   return (
     <div>
@@ -24,30 +14,53 @@ const Total = (props) => {
   );
 };
 
-const Content = (props) => {
+const Part = (props) => {
   return (
     <div>
       <p>
-        {props.partsAndExercises[0]} {props.partsAndExercises[1]}
+        {props.part.name} {props.part.exercises}
       </p>
-      <p>
-        {props.partsAndExercises[2]} {props.partsAndExercises[3]}
-      </p>
-      <p>
-        {props.partsAndExercises[4]} {props.partsAndExercises[5]}
-      </p>
+    </div>
+  );
+};
+
+const Content = (props) => {
+  // console.log(props.parts[0]);
+  return (
+    <div>
+      <Part part={props.parts[0]} />
+      <Part part={props.parts[1]} />
+      <Part part={props.parts[2]} />
     </div>
   );
 };
 
 const App = () => {
   const course = 'Half Stack application development';
-  const part1 = 'Fundamentals of React';
-  const exercises1 = 10;
-  const part2 = 'Using props to pass data';
-  const exercises2 = 7;
-  const part3 = 'State of a component';
-  const exercises3 = 14;
+
+  // instantiate array of objects
+  const courses = [];
+
+  // instantiate each part as an object
+  const part1 = {
+    name: 'Fundamentals of React',
+    exercises: 10,
+  };
+  courses.push(part1);
+
+  const part2 = {
+    name: 'Using props to pass data',
+    exercises: 7,
+  };
+  courses.push(part2);
+
+  const part3 = {
+    name: 'State of a component',
+    exercises: 14,
+  };
+  courses.push(part3);
+
+  // add objects to array
 
   // Content renders the parts and their number of exercises
   // Total renders the total number of exercises
@@ -55,18 +68,10 @@ const App = () => {
   return (
     <div>
       <Header title={course} />
-      <Content
-        partsAndExercises={[
-          part1,
-          exercises1,
-          part2,
-          exercises2,
-          part3,
-          exercises3,
-        ]}
+      <Content parts={courses} />
+      <Total
+        totalExercises={part1.exercises + part2.exercises + part3.exercises}
       />
-
-      <Total totalExercises={exercises1 + exercises2 + exercises3} />
     </div>
   );
 };
