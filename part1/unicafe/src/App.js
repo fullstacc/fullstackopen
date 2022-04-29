@@ -20,9 +20,20 @@ const Button = (props) => (
 const Statistics = (props) => {
   const allFeedback = props.good + props.bad + props.neutral;
 
-  //TODO: average and positive should be calculated by functions with conditional logic to test for initial 0
-  const average = (props.good - props.bad) / allFeedback;
-  const positive = (props.good / allFeedback) * 100;
+  const Average = () => {
+    if (allFeedback > 0) {
+      const average = (props.good - props.bad) / allFeedback;
+      return <p>average {average} </p>;
+    }
+  };
+
+  const Positive = () => {
+    if (allFeedback > 0) {
+      const positive = (props.good / allFeedback) * 100;
+      return <p>positive {positive} %</p>;
+    }
+  };
+
   if (props.good > 0 || props.neutral > 0 || props.bad > 0) {
     return (
       <div>
@@ -32,8 +43,8 @@ const Statistics = (props) => {
           <p>neutral {props.neutral}</p>
           <p>bad {props.bad}</p>
           <p>all {allFeedback}</p>
-          <p>average {average} </p>
-          <p>positive {positive} %</p>
+          <Average />
+          <Positive />
         </div>
       </div>
     );
