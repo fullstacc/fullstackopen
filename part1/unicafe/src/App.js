@@ -24,29 +24,18 @@ const StatisticsLine = (props) => {
   if (props.text === 'average') {
     // compute average
     const average = (props.good - props.bad) / props.allFeedback;
-    returnText = (
-      <div>
-        {props.text} {average}
-      </div>
-    );
-
+    returnText = `${props.text} ${average}`;
     return returnText;
   } else if (props.text === 'positive') {
     const positive = (props.good / props.allFeedback) * 100;
-    returnText = (
-      <div>
-        {props.text} {positive} %
-      </div>
-    );
+
+    //interpolation ftw
+    returnText = `${props.text} ${positive} %`;
   } else {
-    returnText = (
-      <div>
-        {props.text} {props.data}
-      </div>
-    );
+    returnText = `${props.text} ${props.data}`;
   }
   return returnText;
-}; // end StatisticsLine
+};
 
 const Statistics = (props) => {
   const allFeedback = props.good + props.bad + props.neutral;
@@ -56,26 +45,36 @@ const Statistics = (props) => {
       <div>
         <h1>statistics</h1>
         <div>
-          <StatisticsLine text="good" data={props.good} />
-          <StatisticsLine text="neutral" data={props.neutral} />
-          <StatisticsLine text="bad" data={props.bad} />
-          <StatisticsLine
-            text="average"
-            good={props.good}
-            bad={props.bad}
-            neutral={props.neutral}
-            allFeedback={allFeedback}
-          />
-          <StatisticsLine
-            text="positive"
-            good={props.good}
-            bad={props.bad}
-            allFeedback={allFeedback}
-          />
-          {/* <p>good {props.good}</p> */}
-          {/* <p>neutral {props.neutral}</p>
-          <p>bad {props.bad}</p>
-          <p>all {allFeedback}</p> */}
+          <table>
+            <tbody>
+              <tr>
+                <StatisticsLine text="good" data={props.good} />
+              </tr>
+              <tr>
+                <StatisticsLine text="neutral" data={props.neutral} />
+              </tr>
+              <tr>
+                <StatisticsLine text="bad" data={props.bad} />
+              </tr>
+              <tr>
+                <StatisticsLine
+                  text="average"
+                  good={props.good}
+                  bad={props.bad}
+                  neutral={props.neutral}
+                  allFeedback={allFeedback}
+                />
+              </tr>
+              <tr>
+                <StatisticsLine
+                  text="positive"
+                  good={props.good}
+                  bad={props.bad}
+                  allFeedback={allFeedback}
+                />
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     );
