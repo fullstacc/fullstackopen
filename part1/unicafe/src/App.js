@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 const Feedback = (props) => {
-  console.log(props);
   // display "give feedback" and feedback sentiment buttons
   return (
     <div>
@@ -17,34 +16,66 @@ const Button = (props) => (
   <button onClick={props.handleClick}>{props.text}</button>
 );
 
+const StatisticsLine = (props) => {
+  console.log('made it here');
+  console.log(props);
+  let returnText = '';
+
+  if (props.text === 'average') {
+    // compute average
+    const average = (props.good - props.bad) / props.allFeedback;
+    returnText = (
+      <div>
+        {props.text} {average}
+      </div>
+    );
+
+    return returnText;
+  } else if (props.text === 'positive') {
+    const positive = (props.good / props.allFeedback) * 100;
+    returnText = (
+      <div>
+        {props.text} {positive} %
+      </div>
+    );
+  } else {
+    returnText = (
+      <div>
+        {props.text} {props.data}
+      </div>
+    );
+  }
+  return returnText;
+}; // end StatisticsLine
+
 const Statistics = (props) => {
   const allFeedback = props.good + props.bad + props.neutral;
-
-  const Average = () => {
-    if (allFeedback > 0) {
-      const average = (props.good - props.bad) / allFeedback;
-      return <p>average {average} </p>;
-    }
-  };
-
-  const Positive = () => {
-    if (allFeedback > 0) {
-      const positive = (props.good / allFeedback) * 100;
-      return <p>positive {positive} %</p>;
-    }
-  };
 
   if (props.good > 0 || props.neutral > 0 || props.bad > 0) {
     return (
       <div>
         <h1>statistics</h1>
         <div>
-          <p>good {props.good}</p>
-          <p>neutral {props.neutral}</p>
+          <StatisticsLine text="good" data={props.good} />
+          <StatisticsLine text="neutral" data={props.neutral} />
+          <StatisticsLine text="bad" data={props.bad} />
+          <StatisticsLine
+            text="average"
+            good={props.good}
+            bad={props.bad}
+            neutral={props.neutral}
+            allFeedback={allFeedback}
+          />
+          <StatisticsLine
+            text="positive"
+            good={props.good}
+            bad={props.bad}
+            allFeedback={allFeedback}
+          />
+          {/* <p>good {props.good}</p> */}
+          {/* <p>neutral {props.neutral}</p>
           <p>bad {props.bad}</p>
-          <p>all {allFeedback}</p>
-          <Average />
-          <Positive />
+          <p>all {allFeedback}</p> */}
         </div>
       </div>
     );
