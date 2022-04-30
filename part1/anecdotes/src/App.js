@@ -11,6 +11,18 @@ const Button = (props) => {
   );
 };
 
+const VoteButton = (props) => {
+  return <button onClick={props.handleClick}>vote</button>;
+};
+
+const MostPopular = ({ anecdotes, allScores }) => {
+  const max = Math.max(...allScores);
+  const maxIndex = allScores.indexOf(max);
+  if (max > 0) {
+    return <div>{anecdotes[maxIndex]}</div>;
+  } else return <div>nothing yet</div>;
+};
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -22,7 +34,11 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients',
   ];
 
+  /* Store the votes of each anecdote into an array or object in the component's state. 
+  Remember that the correct way of updating state stored in complex data structures like objects and arrays is to make a copy of the state. */
+
   const [selected, setSelected] = useState(0);
+  const [allScores, setScores] = useState(Array(6).fill(0));
 
   const newAnecdote = () => {
     // generates a random number between 0 and the number of anecdotes in the anecdotes array
@@ -30,13 +46,23 @@ const App = () => {
     const randNumber = Math.floor(Math.random() * anecdotes.length);
 
     setSelected(randNumber);
-    console.log(anecdotes[selected]);
+  };
+
+  const submitVote = () => {
+    const copy = [...allScores];
+    copy[selected] += 1;
+    setScores(copy);
   };
 
   return (
     <div>
+      <h1>anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
+      <div>current votes {allScores[selected]}</div>
+      <VoteButton handleClick={submitVote}></VoteButton>
       <Button handleClick={newAnecdote}></Button>
+      <h1>most popular anecdote</h1>
+      <MostPopular anecdotes={anecdotes} allScores={allScores} />
     </div>
   );
 };
