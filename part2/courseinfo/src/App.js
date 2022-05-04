@@ -20,15 +20,22 @@ const Content = ({ parts }) => {
   return (
     <div>
       {parts.map((part) => (
-        <div key={part.id}>
-          {part.name} {part.exercises}
-        </div>
+        <Part part={part} />
       ))}
     </div>
   );
 };
 
-const Part = (props) => {};
+// parts are the lowest level of components
+const Part = ({ part }) => {
+  console.log('props from part component', part);
+  return (
+    <div key={part.id}>
+      {' '}
+      {part.name} {part.exercises}
+    </div>
+  );
+};
 
 const App = () => {
   const course = {
