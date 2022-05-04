@@ -1,52 +1,4 @@
-const Course = ({ course }) => {
-  return (
-    <div>
-      <Header name={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
-    </div>
-  );
-};
-
-const Total = ({ parts }) => {
-  console.log('total of', parts);
-  const totalExercises = parts.reduce((sum, exercise) => {
-    return (sum += exercise.exercises);
-  }, 0);
-
-  return (
-    <div>
-      <b>total of {totalExercises} exercises</b>
-    </div>
-  );
-};
-
-const Header = ({ name }) => (
-  <div>
-    <h1>{name}</h1>
-  </div>
-);
-
-// content is used to return parts
-const Content = ({ parts }) => {
-  return (
-    <div>
-      {parts.map((part) => (
-        <Part part={part} />
-      ))}
-    </div>
-  );
-};
-
-// parts are the lowest level of components
-const Part = ({ part }) => {
-  return (
-    <div key={part.id}>
-      {' '}
-      {part.name} {part.exercises}
-    </div>
-  );
-};
+import Course from './components/Course';
 
 const App = () => {
   const courses = [
@@ -95,7 +47,7 @@ const App = () => {
   ];
 
   return courses.map((course) => {
-    return <Course course={course} />;
+    return <Course key={course.id} course={course} />;
   });
 };
 
@@ -113,3 +65,7 @@ export default App;
 
 // 2.4: Course information step9
 // Let's extend our application to allow for an arbitrary number of courses
+
+// 2.5: separate module
+// Declare the Course component as a separate module, which is imported by the App component.
+// You can include all subcomponents of the course into the same module.
