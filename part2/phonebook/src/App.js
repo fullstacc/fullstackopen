@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
 
 const App = () => {
 
@@ -20,9 +23,6 @@ const App = () => {
 
   // state management for the search form
   const [query, setQuery] = useState('enter query here')
-
-  
-
 
 
   // function for adding contacts to the persons state
@@ -72,46 +72,15 @@ const App = () => {
     
   }
 
-  // Component for displaying all phonebook (or search results)
-  const OutputArea = (props) => {
-
- 
-    const personsToShow = showAll ? persons : persons.filter(person => person.name.includes(query)) ;
-
-      return (
-        <ul>
-          {personsToShow.map((person) => {
-            return <li>
-              {person.name} {person.number}
-            </li>
-          })}
-        </ul>
-      )
-  }
-
-
+  const personFormPropsObj = {addContact, handleInputName, newNumber, newName, handleInputNumber}
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div id="case-insensitive-search">
-        Search for an entry < input value={query} onChange={handleQuery} />
-      </div>
-      <form onSubmit={addContact}>
-        <h2> Add Entry </h2>
-        <div>
-          name: <input value={newName} onChange={handleInputName}/>
-        </div>
-        
-        <div>number: <input value={newNumber} onChange={handleInputNumber} /></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        <OutputArea />
-      </div>
+      <Filter query={query} handleQuery={handleQuery}/>
+      <PersonForm propsObj={personFormPropsObj}/>
+      <Persons showAll={showAll} query={query} persons={persons}/>
+      
     </div>
   )
 }
