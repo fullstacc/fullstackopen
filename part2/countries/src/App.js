@@ -46,6 +46,7 @@ function App() {
       <h1>countries</h1>
       <Form
         propsObj={countryFormPropsObj}
+        setShowAll={setShowAll}
         handleInputCountry={handleInputCountry}
       />
       <Countries countries={countries} showAll={showAll} query={query} />
@@ -61,3 +62,6 @@ export default App;
 
 // The country to be shown is found by typing a search query into the search field.
 // If there are too many (over 10) countries that match the query, then the user is prompted to make their query more specific
+
+// When there is only one country matching the query,
+// then the basic data of the country (eg. capital and area), its flag and the languages spoken there, are shown

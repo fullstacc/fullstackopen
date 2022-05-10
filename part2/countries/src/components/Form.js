@@ -5,15 +5,10 @@ const Form = ({ query, handleInputCountry, setNewQuery, setShowAll }) => {
 
   return (
     // TODO: onSubmit, input initial state value, onchange value,
-    <form>
+    <form onSubmit={submitHandler}>
       <h2> add entry </h2>
       <div>
-        find countries:{' '}
-        <input
-          value={query}
-          onChange={handleInputCountry}
-          onSubmit={submitHandler}
-        />
+        find countries: <input value={query} onChange={handleInputCountry} />
       </div>
     </form>
   );
