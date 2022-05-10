@@ -8,16 +8,25 @@ function App() {
   // state for form input element
   const [query, setNewQuery] = useState('enter country here');
   const [countries, setCountries] = useState([]);
+  const [showAll, setShowAll] = useState(true);
 
   // input handlers
   const handleInputCountry = (event) => {
     setNewQuery(event.target.value);
+    console.log('setnewquery is', event.target.value);
+    if (query !== '') {
+      // flip search flag
+      setShowAll(false);
+    } else {
+      setShowAll(true);
+    }
   };
 
   // props objects to simplify passing props
   const countryFormPropsObj = {
     query,
-    handleInputCountry,
+    setNewQuery,
+    setShowAll,
   };
 
   // load the data from the server (after initial render)
@@ -26,19 +35,20 @@ function App() {
   useEffect(() => {
     console.log('effect');
     axios.get(dataSource).then((response) => {
-      console.log('promise fulfilled');
-      console.log(response.data);
-      setCountries(response.data);
-      console.log('validating countries', countries[0]);
-      console.log('number of countries', countries.length);
+      const responseArray = response.data;
+      // TODO: sort countries by common name
+      setCountries(responseArray);
     });
   }, []);
 
   return (
     <div>
       <h1>countries</h1>
-      <Form propsObj={countryFormPropsObj} />
-      <Countries countries={countries} />
+      <Form
+        propsObj={countryFormPropsObj}
+        handleInputCountry={handleInputCountry}
+      />
+      <Countries countries={countries} showAll={showAll} query={query} />
     </div>
   );
 }
