@@ -15,14 +15,12 @@ const Countries = ({ countries, showAll, query }) => {
 
     if (countriesToShow.length === 1) {
       const selectedCountry = countriesToShow[0];
-      console.log(selectedCountry);
-      console.log('languages', selectedCountry.languages);
+      const languages = Object.values(selectedCountry.languages);
       return (
         <div>
           <table>
             <tr>
               <td>
-                {' '}
                 <h3> {selectedCountry.name.common} </h3>
               </td>
             </tr>
@@ -30,10 +28,22 @@ const Countries = ({ countries, showAll, query }) => {
               <td> Capital: {selectedCountry.capital}</td>
             </tr>
             <tr>
-              <td>Languages:</td>
+              <td> Area: {selectedCountry.area} km²</td>
             </tr>
             <tr>
-              <td></td>
+              <td>
+                Languages:
+                <ul>
+                  {languages.map((x) => (
+                    <li>{x}</li>
+                  ))}
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <img src={selectedCountry.flags['png']} alt="country flag" />
+              </td>
             </tr>
           </table>
         </div>
