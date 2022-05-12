@@ -22,6 +22,10 @@ function App() {
     }
   };
 
+  const handleShowDetails = () => {
+    setShowDetails(!details);
+  };
+
   // props objects to simplify passing props
   const countryFormPropsObj = {
     query,
@@ -57,7 +61,7 @@ function App() {
         showAll={showAll}
         query={query}
         details={details}
-        setShowDetails={setShowDetails}
+        handleShowDetails={handleShowDetails}
       />
     </div>
   );

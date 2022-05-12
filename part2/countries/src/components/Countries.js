@@ -1,13 +1,22 @@
 // component for displaying search results; matches case-insensitively
-const Countries = ({ countries, showAll, query, details, setShowDetails }) => {
+const Countries = ({
+  countries,
+  showAll,
+  query,
+  details,
+  handleShowDetails,
+}) => {
   const toggleShowCountry = (uid) => {
-    setShowDetails(!details);
-    if (details === false) {
+    console.log('details status is', details);
+    // if [show]details is false, show the details
+    if (!details) {
+      handleShowDetails();
       let thisCountry = countriesToShow.find((country) => country.uid === uid);
       const languages = Object.values(thisCountry.languages);
       console.log(languages);
       // create container and internals
       let countryDetail = document.createElement('div');
+      countryDetail.setAttribute('id', 'details-table');
       let tableToInsert = document.createElement('table');
       let row = tableToInsert.insertRow(0);
       let row2 = tableToInsert.insertRow(1);
@@ -35,6 +44,13 @@ const Countries = ({ countries, showAll, query, details, setShowDetails }) => {
       // if (document.querySelectorAll)
 
       document.getElementById(uid).appendChild(countryDetail);
+    }
+    // if showdetails is true, we already have a details window open so break it down
+    else {
+      let thisCountryCell = document.getElementById('details-table');
+      console.log(thisCountryCell.parentElement);
+      thisCountryCell.outerHTML = '';
+      handleShowDetails();
     }
   };
 
