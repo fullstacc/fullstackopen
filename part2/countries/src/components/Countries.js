@@ -5,15 +5,18 @@ const Countries = ({
   query,
   details,
   handleShowDetails,
+  handleCurrentCountry,
 }) => {
   const toggleShowCountry = (uid) => {
-    console.log('details status is', details);
     // if [show]details is false, show the details
     if (!details) {
       handleShowDetails();
       let thisCountry = countriesToShow.find((country) => country.uid === uid);
+
+      // set state for curent country
+      handleCurrentCountry(thisCountry);
+
       const languages = Object.values(thisCountry.languages);
-      console.log(languages);
       // create container and internals
       let countryDetail = document.createElement('div');
       countryDetail.setAttribute('id', 'details-table');
@@ -37,7 +40,6 @@ const Countries = ({
       cell4.innerHTML = `Languages: ${languages}`;
       cell5.innerHTML = `<img src=${thisCountry.flags['png']} alt="country flag" />`;
 
-      console.log(tableToInsert);
       countryDetail.appendChild(tableToInsert);
 
       // test to see if we're looking at all countries or a subset
@@ -48,7 +50,6 @@ const Countries = ({
     // if showdetails is true, we already have a details window open so break it down
     else {
       let thisCountryCell = document.getElementById('details-table');
-      console.log(thisCountryCell.parentElement);
       thisCountryCell.outerHTML = '';
       handleShowDetails();
     }
@@ -70,7 +71,6 @@ const Countries = ({
     if (countriesToShow.length === 1) {
       const selectedCountry = countriesToShow[0];
       const languages = Object.values(selectedCountry.languages);
-      console.log(selectedCountry.uid);
       return (
         <div>
           <table>
