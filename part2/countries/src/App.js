@@ -10,6 +10,7 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [showAll, setShowAll] = useState(true);
   const [details, setShowDetails] = useState(false);
+  const [currentCountry, setCurrentCountry] = useState([]);
 
   // input handlers
   const handleInputCountry = (event) => {
@@ -20,6 +21,11 @@ function App() {
     } else {
       setShowAll(true);
     }
+  };
+
+  const handleCurrentCountry = (currentCountry) => {
+    console.log('current country changed!');
+    setCurrentCountry(currentCountry);
   };
 
   const handleShowDetails = () => {
@@ -46,7 +52,12 @@ function App() {
       // TODO: sort countries by common name
       setCountries(responseArray);
     });
-  }, []);
+  }, [countries]);
+
+  // Create a state for currentCountry and embed the latlon in that state
+  // when the state changes, it will load the weather data source
+  // or set a state for the current weatherDataSource
+  // whenever currentCountry changes, change weatherDataSource and then display result in Countries detail
 
   // TODO: Get weather data
   // OpenWeather API requires use of Geocoding API to translate city names to lat/lon
@@ -54,9 +65,25 @@ function App() {
   // is it better to load 250 weather data once and store in memory? or query for weather data only when asked?
   // to preserve my api usage requirements, opting for latter
 
-  const getWeatherData = (lat, lon) => {
-    const weatherDataSource = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid={API key}`;
-  };
+  useEffect(() => {
+    console.log('firing');
+    if (Object.keys(currentCountry).length > 0) {
+      console.log('madeithere');
+      const latlng = Object.values(currentCountry.latlng);
+      const lat = latlng[0];
+      const lon = latlng[1];
+      const APIKEY = process.env.REACT_APP_WEATHER_API_KEY;
+      console.log('precall');
+      const weatherDataSource = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`;
+      console.log('weatherdatasource', weatherDataSource);
+      axios.get(weatherDataSource).then((response) => {
+        console.log('iam here now');
+        let responseArray = response.data;
+        console.log(responseArray);
+        // add unique identifiers for each country prior to loading them into app state
+      });
+    }
+  }, [currentCountry]);
 
   return (
     <div>
@@ -72,6 +99,7 @@ function App() {
         query={query}
         details={details}
         handleShowDetails={handleShowDetails}
+        handleCurrentCountry={handleCurrentCountry}
       />
     </div>
   );
