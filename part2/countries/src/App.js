@@ -48,6 +48,16 @@ function App() {
     });
   }, []);
 
+  // TODO: Get weather data
+  // OpenWeather API requires use of Geocoding API to translate city names to lat/lon
+  // lat/lon already included in dataSource schema: country.capitalInfo.latlng
+  // is it better to load 250 weather data once and store in memory? or query for weather data only when asked?
+  // to preserve my api usage requirements, opting for latter
+
+  const getWeatherData = (lat, lon) => {
+    const weatherDataSource = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid={API key}`;
+  };
+
   return (
     <div>
       <h1>countries</h1>
@@ -79,3 +89,6 @@ export default App;
 
 //2.13: Improve on the application in the previous exercise, such that when the names of multiple countries are shown on
 // the page there is a button next to the name of the country, which when pressed shows the view for that country
+
+// 2.14: Add to the view showing the data of a single country, the weather report for the capital of that country.
+// There are dozens of providers for weather data.
