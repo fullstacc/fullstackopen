@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 import Form from './components/Form';
+import Country from './components/Country';
 import Countries from './components/Countries';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   const [showAll, setShowAll] = useState(true);
   const [details, setShowDetails] = useState(false);
   const [currentCountry, setCurrentCountry] = useState([]);
+  const [currentCountryWeather] = useState([]);
 
   // input handlers
   const handleInputCountry = (event) => {
@@ -23,10 +25,27 @@ function App() {
     }
   };
 
-  const handleCurrentCountry = (currentCountry) => {
-    console.log('current country changed!');
-    setCurrentCountry(currentCountry);
+  // object for template for weather params
+  const defaultWeather = {
+    currentTemp: 'unknown',
+    currentFeelsLike: 'unknown',
+    currentImage: '',
   };
+
+  const handleCurrentCountry = (currentCountry, weather = defaultWeather) => {
+    console.log('current country changed!');
+    let tempCountry = {
+      ...currentCountry,
+      ...weather,
+    };
+
+    setCurrentCountry(tempCountry);
+  };
+
+  // unnecessary, current weather is tied to the currentCountry state
+  // const handleCurrentCountryWeather = (currentCountryWeather) => {
+  //   setCurrentCountryWeather(currentCountryWeather);
+  // };
 
   const handleShowDetails = () => {
     setShowDetails(!details);
@@ -77,13 +96,20 @@ function App() {
       const weatherDataSource = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`;
       console.log('weatherdatasource', weatherDataSource);
       axios.get(weatherDataSource).then((response) => {
-        console.log('iam here now');
-        let responseArray = response.data;
-        console.log(responseArray);
-        // add unique identifiers for each country prior to loading them into app state
+        console.log(response.data.main.temp);
+        let tempWeatherObject = {
+          currentTemp: response.data.main.temp,
+          currentFeelsLike: 'unknown',
+          currentImage: '',
+        };
+        handleCurrentCountry(currentCountry, tempWeatherObject);
+        // let responseArray = response.data;
+        // handleCurrentCountryWeather(response.data);
+        // add attributes for current temperature, weather, feels like, etc.
       });
     }
   }, [currentCountry]);
+  // something in the above is the problem! fix constant queries to api endpoint
 
   return (
     <div>
@@ -100,6 +126,7 @@ function App() {
         details={details}
         handleShowDetails={handleShowDetails}
         handleCurrentCountry={handleCurrentCountry}
+        currentCountryWeather={currentCountryWeather}
       />
     </div>
   );

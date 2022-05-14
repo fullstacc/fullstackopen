@@ -1,3 +1,5 @@
+import Country from './Country';
+
 // component for displaying search results; matches case-insensitively
 const Countries = ({
   countries,
@@ -6,6 +8,8 @@ const Countries = ({
   details,
   handleShowDetails,
   handleCurrentCountry,
+  handleCurrentCountryWeather,
+  currentCountryWeather,
 }) => {
   const toggleShowCountry = (uid) => {
     // if [show]details is false, show the details
@@ -40,10 +44,32 @@ const Countries = ({
       cell4.innerHTML = `Languages: ${languages}`;
       cell5.innerHTML = `<img src=${thisCountry.flags['png']} alt="country flag" />`;
 
-      countryDetail.appendChild(tableToInsert);
+      const weatherTable = document.createElement('div');
+      weatherTable.setAttribute('id', 'weather-table');
+      let weatherTableToInsert = document.createElement('table');
+      let weatherRow = tableToInsert.insertRow(0);
+      let weatherRow2 = tableToInsert.insertRow(1);
+      let weatherRow3 = tableToInsert.insertRow(2);
+      let weatherRow4 = tableToInsert.insertRow(3);
 
-      // test to see if we're looking at all countries or a subset
-      // if (document.querySelectorAll)
+      let weatherCell1 = weatherRow.insertCell(0);
+      let weatherCell2 = weatherRow2.insertCell(0);
+      let weatherCell3 = weatherRow3.insertCell(0);
+      let weatherCell4 = weatherRow4.insertCell(0);
+
+      weatherCell1.innerHTML = `current weather in ${thisCountry.capital}`;
+      weatherCell2.innerHTML = `Temperature: `;
+      console.log('current weather', currentCountryWeather);
+
+      countryDetail.appendChild(tableToInsert);
+      countryDetail.appendChild(weatherTableToInsert);
+      let countryDetail2 = (
+        <Country country={thisCountry} languages={languages} />
+      );
+
+      // TODO: Append a country component as a DOM node
+
+      console.log('country2', countryDetail2);
 
       document.getElementById(uid).appendChild(countryDetail);
     }
@@ -67,43 +93,18 @@ const Countries = ({
         <div>too many countries found, please enter more specific query</div>
       );
     }
-
+    // view individual country details
     if (countriesToShow.length === 1) {
+      // this method seems to cause the state to constantly be reset in handleCurrentCountry()
       const selectedCountry = countriesToShow[0];
+
       const languages = Object.values(selectedCountry.languages);
       return (
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  <h3> {selectedCountry.name.common} </h3>
-                </td>
-              </tr>
-              <tr>
-                <td> Capital: {selectedCountry.capital}</td>
-              </tr>
-              <tr>
-                <td> Area: {selectedCountry.area} km²</td>
-              </tr>
-              <tr>
-                <td>
-                  Languages:
-                  <ul>
-                    {languages.map((x) => (
-                      <li>{x}</li>
-                    ))}
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <img src={selectedCountry.flags['png']} alt="country flag" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <Country
+          country={selectedCountry}
+          languages={languages}
+          handleCurrentCountry={handleCurrentCountry}
+        />
       );
     }
     return (
