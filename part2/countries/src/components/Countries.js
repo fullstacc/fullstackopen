@@ -72,6 +72,7 @@ const Countries = ({
       console.log('country2', countryDetail2);
 
       document.getElementById(uid).appendChild(countryDetail);
+      document.getElementById(uid).appendChild(countryDetail2);
     }
     // if showdetails is true, we already have a details window open so break it down
     else {
