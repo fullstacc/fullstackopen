@@ -40,6 +40,7 @@ function App() {
     };
 
     setCurrentCountry(tempCountry);
+    console.log('currentcountry', currentCountry.name.common);
   };
 
   // unnecessary, current weather is tied to the currentCountry state
@@ -108,7 +109,7 @@ function App() {
         // add attributes for current temperature, weather, feels like, etc.
       });
     }
-  }, [currentCountry]);
+  }, [currentCountry.name]);
   // something in the above is the problem! fix constant queries to api endpoint
 
   return (
