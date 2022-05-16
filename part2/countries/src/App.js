@@ -16,6 +16,7 @@ function App() {
 
   // input handlers
   const handleInputCountry = (event) => {
+    console.log('input query state changed!');
     setNewQuery(event.target.value);
     if (query !== '') {
       // flip search flag
@@ -33,22 +34,16 @@ function App() {
   };
 
   const handleCurrentCountry = (currentCountry, weather = defaultWeather) => {
-    console.log('current country changed!');
     let tempCountry = {
       ...currentCountry,
       ...weather,
     };
-
+    console.log('current country state changed!');
     setCurrentCountry(tempCountry);
-    console.log('currentcountry', currentCountry.name.common);
   };
 
-  // unnecessary, current weather is tied to the currentCountry state
-  // const handleCurrentCountryWeather = (currentCountryWeather) => {
-  //   setCurrentCountryWeather(currentCountryWeather);
-  // };
-
-  const handleShowDetails = () => {
+  const handleShowDetails = (uid) => {
+    // flip details state flag
     setShowDetails(!details);
   };
 
@@ -63,16 +58,20 @@ function App() {
   // TODO: extract from the endpoint only the data we need (there are lots of fields!)
   const dataSource = 'https://restcountries.com/v3.1/all';
   useEffect(() => {
+    console.log(
+      'useeffect for country data has been called, countries array has changed'
+    );
     axios.get(dataSource).then((response) => {
+      console.log('trying to get country data');
       let responseArray = response.data;
       // add unique identifiers for each country prior to loading them into app state
       responseArray = responseArray.map((country, index) => {
-        return { ...country, uid: index };
+        return { ...country, uid: index, viewDetails: false };
       });
       // TODO: sort countries by common name
       setCountries(responseArray);
     });
-  }, [countries]);
+  }, []);
 
   // Create a state for currentCountry and embed the latlon in that state
   // when the state changes, it will load the weather data source
@@ -86,18 +85,17 @@ function App() {
   // to preserve my api usage requirements, opting for latter
 
   useEffect(() => {
-    console.log('firing');
+    console.log(
+      'useeffect for weather data has been called, currentCountry has changed'
+    );
     if (Object.keys(currentCountry).length > 0) {
-      console.log('madeithere');
       const latlng = Object.values(currentCountry.latlng);
       const lat = latlng[0];
       const lon = latlng[1];
       const APIKEY = process.env.REACT_APP_WEATHER_API_KEY;
-      console.log('precall');
       const weatherDataSource = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`;
-      console.log('weatherdatasource', weatherDataSource);
       axios.get(weatherDataSource).then((response) => {
-        console.log(response.data.main.temp);
+        console.log('main temp at this country', response.data.main.temp);
         let tempWeatherObject = {
           currentTemp: response.data.main.temp,
           currentFeelsLike: 'unknown',
