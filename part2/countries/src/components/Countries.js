@@ -2,39 +2,15 @@ import React from 'react';
 import Country from './Country';
 
 // component for displaying search results; matches case-insensitively
-const Countries = ({
-  countries,
-  showAll,
-  query,
-  details,
-  handleShowDetails,
-  handleCurrentCountry,
-  handleCurrentCountryWeather,
-  currentCountryWeather,
-}) => {
+const Countries = ({ countries, showAll, query, handleCurrentCountry }) => {
   // function to update the DOM if toggle switch is activated
   const updateDOM = (country) => {
     const uid = country.uid;
-    const countryTable = document.getElementById(country.uid);
-    countryTable.appendChild('stuff goes here');
+    // const countryTable = document.getElementById(country.uid); avoid accessing DOM directly when using React
+    // countryTable.appendChild('stuff goes here');
   };
 
   // ---------------------------
-
-  // TOGGLE SWITCH TO SHOW COUNTRY DETAILS
-  const toggleShowCountry = (uid) => {
-    // if [show]details is false, show the details
-    if (!details) {
-      handleShowDetails(uid); // sets the details flag state
-      let thisCountry = countriesToShow.find((country) => country.uid === uid);
-      handleCurrentCountry(thisCountry); // used for weather fields
-      updateDOM(thisCountry);
-    }
-    // if showdetails is true, we already have a details window open so break it down
-    else {
-      handleShowDetails(uid); // flip the details flag state, which is linked to the css
-    }
-  };
 
   const countriesToShow = showAll
     ? countries
@@ -71,9 +47,8 @@ const Countries = ({
             let uid = x.uid;
             return (
               <li key={i} id={x.uid}>
-                {x.name.common}{' '}
-                <button onClick={() => toggleShowCountry(uid)}>show</button>
-                {details ? <Country country={x} /> : details}
+                {x.name.common}
+                <Country country={x} />
               </li>
             );
           })}
