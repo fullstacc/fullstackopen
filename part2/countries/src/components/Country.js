@@ -1,14 +1,17 @@
+import React, { useState } from 'react';
+
 const Country = ({ country }) => {
-  if (country.uid < 250) {
-    console.log('printing country details', country);
-  }
+  //   country has its own state for visibility
+  const [visibility, setVisibility] = useState(false);
 
-  if (country.uid < 250) {
-    console.log('country is', country.name.common);
-    // const languages = Object.values(country.languages);
+  // function for flipping visibility
+  const makeVisible = () => {
+    setVisibility(!visibility);
+  };
 
+  if (visibility) {
     return (
-      <div className="country-table" id={country.uid}>
+      <div id={country.uid}>
         <table>
           <tbody>
             <tr>
@@ -48,6 +51,21 @@ const Country = ({ country }) => {
             </tr>
           </tbody>
         </table>
+        <div>
+          <button onClick={makeVisible}>
+            {' '}
+            Hide {country.name.common} details{' '}
+          </button>
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <button onClick={makeVisible}>
+          {' '}
+          show {country.name.common} details
+        </button>
       </div>
     );
   }

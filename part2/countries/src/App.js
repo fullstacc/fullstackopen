@@ -13,8 +13,9 @@ function App() {
   const [details, setShowDetails] = useState(false);
   const [currentCountry, setCurrentCountry] = useState([]);
   const [currentCountryWeather] = useState([]);
+  const [countryVisiblities, setCountryVisibilities] = useState([]);
 
-  // input handlers
+  // input handler for search form
   const handleInputCountry = (event) => {
     console.log('input query state changed!');
     setNewQuery(event.target.value);
@@ -33,11 +34,29 @@ function App() {
     currentImage: '',
   };
 
+  const handleVisiblity = (idx) => {
+    setCountryVisibilities([idx])
+
+  }
+
+  // adds weather paramters to the selected country, only when this function fires
+  // also toggles the individual country's visibility by altering its state (via its viewDetails property)
   const handleCurrentCountry = (currentCountry, weather = defaultWeather) => {
+    // add weather fields
     let tempCountry = {
       ...currentCountry,
       ...weather,
     };
+
+    // flip the visibility of that country
+    tempCountry.viewDetails = !tempCountry.viewDetails;
+
+    // this is actually bad! it will cause the entire list of countries to re-render which will have cascading effects
+    // replace the countries array with the modified version of that country
+    let countriesCopy = countries;
+    countriesCopy[tempCountry.uid] = tempCountry;
+    setCountries(countriesCopy);
+
     console.log('current country state changed!');
     setCurrentCountry(tempCountry);
   };
@@ -68,8 +87,11 @@ function App() {
       responseArray = responseArray.map((country, index) => {
         return { ...country, uid: index, viewDetails: false };
       });
-      // TODO: sort countries by common name
       setCountries(responseArray);
+
+      // set array of booloeans
+      let falseArray = new Array(countries.length).fill(false);
+      setCountryVisibilities(falseArray);
     });
   }, []);
 
@@ -124,6 +146,7 @@ function App() {
         query={query}
         details={details}
         handleShowDetails={handleShowDetails}
+        currentCountry={currentCountry}
         handleCurrentCountry={handleCurrentCountry}
         currentCountryWeather={currentCountryWeather}
       />
