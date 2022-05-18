@@ -17,8 +17,6 @@ const Country = ({ country }) => {
     setVisibility(!visibility);
 
     const latlng = Object.values(country.latlng);
-    const lat = latlng[0];
-    const lon = latlng[1];
     const APIKEY = process.env.REACT_APP_WEATHER_API_KEY;
 
     const updatedWeatherSource = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${latlng}?key=${APIKEY} `;
@@ -26,7 +24,6 @@ const Country = ({ country }) => {
 
     axios.get(updatedWeatherSource).then((response) => {
       console.log('trying to get country data');
-      let responseArray = response.data;
       const currentTemp = response.data.currentConditions.temp;
       const currentConditions = response.data.currentConditions.conditions;
 
