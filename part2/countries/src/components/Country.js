@@ -1,13 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Country = ({ country }) => {
+  const tempWeatherObject = {
+    currentTemp: 'unknown',
+    currentConditions: 'unknown',
+  };
+
   //   country has its own state for visibility
   const [visibility, setVisibility] = useState(false);
+  // state for weather
+  const [weather, setWeather] = useState(tempWeatherObject);
 
   // function for flipping visibility
   const makeVisible = () => {
     setVisibility(!visibility);
+
+    const latlng = Object.values(country.latlng);
+    const APIKEY = process.env.REACT_APP_WEATHER_API_KEY;
+
+    const updatedWeatherSource = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${latlng}?key=${APIKEY} `;
+    console.log('this is weatherdatasource', updatedWeatherSource);
+
+    axios.get(updatedWeatherSource).then((response) => {
+      console.log('trying to get country data');
+      const currentTemp = response.data.currentConditions.temp;
+      const currentConditions = response.data.currentConditions.conditions;
+
+      const weatherObject = {
+        currentTemp: currentTemp,
+        currentConditions: currentConditions,
+      };
+
+      setWeather(weatherObject);
+    });
   };
+
+  // side effect for loading weather data
+  useEffect(() => {}, []);
 
   if (visibility) {
     return (
@@ -47,7 +77,10 @@ const Country = ({ country }) => {
               </td>
             </tr>
             <tr>
-              <td>Current Temperature:</td>
+              <td> Current Conditions: {weather.currentConditions}</td>
+            </tr>
+            <tr>
+              <td> Current Temperature: {weather.currentTemp}</td>
             </tr>
           </tbody>
         </table>
@@ -72,29 +105,3 @@ const Country = ({ country }) => {
 };
 
 export default Country;
-
-// create container and internals
-// let countryDetail = document.createElement('div');
-// countryDetail.setAttribute('id', 'details-table');
-// let tableToInsert = document.createElement('table');
-// let row = tableToInsert.insertRow(0);
-// let row2 = tableToInsert.insertRow(1);
-// let row3 = tableToInsert.insertRow(2);
-// let row4 = tableToInsert.insertRow(3);
-// let row5 = tableToInsert.insertRow(4);
-
-// // inser cells into rows
-// let cell1 = row.insertCell(0);
-// let cell2 = row2.insertCell(0);
-// let cell3 = row3.insertCell(0);
-// let cell4 = row4.insertCell(0);
-// let cell5 = row5.insertCell(0);
-
-// cell1.innerHTML = country.name.common;
-// cell2.innerHTML = `Capital: ${country.capital}`;
-// cell3.innerHTML = `Area: ${country.area}`;
-// cell4.innerHTML = `Languages: ${languages}`;
-// cell5.innerHTML = `<img src=${country.flags['png']} alt="country flag" />`;
-
-// put the table in a parent div
-// countryDetail.appendChild(tableToInsert);

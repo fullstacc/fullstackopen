@@ -31,11 +31,15 @@ const Countries = ({ countries, showAll, query, handleCurrentCountry }) => {
       const selectedCountry = countriesToShow[0];
       const languages = Object.values(selectedCountry.languages);
       return (
-        <Country
-          country={selectedCountry}
-          languages={languages}
-          handleCurrentCountry={() => handleCurrentCountry}
-        />
+        <div>
+          {' '}
+          <p>{selectedCountry.name.common}</p>
+          <Country
+            country={selectedCountry}
+            languages={languages}
+            handleCurrentCountry={() => handleCurrentCountry}
+          />
+        </div>
       );
     } // end if countriestoshow length is 1
 
@@ -56,7 +60,6 @@ const Countries = ({ countries, showAll, query, handleCurrentCountry }) => {
       </div>
     );
   } else {
-    console.log('made it here');
     return <div>no results found!</div>;
   } // end no results found
 }; // end Countries component
