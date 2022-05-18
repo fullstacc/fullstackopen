@@ -106,30 +106,7 @@ function App() {
   // is it better to load 250 weather data once and store in memory? or query for weather data only when asked?
   // to preserve my api usage requirements, opting for latter
 
-  useEffect(() => {
-    console.log(
-      'useeffect for weather data has been called, currentCountry has changed'
-    );
-    if (Object.keys(currentCountry).length > 0) {
-      const latlng = Object.values(currentCountry.latlng);
-      const lat = latlng[0];
-      const lon = latlng[1];
-      const APIKEY = process.env.REACT_APP_WEATHER_API_KEY;
-      const weatherDataSource = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}`;
-      axios.get(weatherDataSource).then((response) => {
-        console.log('main temp at this country', response.data.main.temp);
-        let tempWeatherObject = {
-          currentTemp: response.data.main.temp,
-          currentFeelsLike: 'unknown',
-          currentImage: '',
-        };
-        handleCurrentCountry(currentCountry, tempWeatherObject);
-        // let responseArray = response.data;
-        // handleCurrentCountryWeather(response.data);
-        // add attributes for current temperature, weather, feels like, etc.
-      });
-    }
-  }, [currentCountry.name]);
+  
   // something in the above is the problem! fix constant queries to api endpoint
 
   return (
