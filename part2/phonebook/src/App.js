@@ -17,26 +17,35 @@ const App = () => {
   // state management for the search form
   const [query, setQuery] = useState('enter query here');
 
+  const localServer = 'http://localhost:3001/persons';
+
   // function for adding contacts to the persons state
+  // TODO: send a post request to the db
   const addContact = (event) => {
     // prevent page from reloading upon form submit
     event.preventDefault();
+    // build an object to post to the database
     const contactObject = {
       name: newName,
       number: newNumber,
       id: persons.length + 1,
     };
 
+    axios
+      .put(localServer, contactObject)
+      .then((res) => res.data)
+      .catch((e) => console.log(e));
+
     // check persons array for presence of duplicate name
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName('');
-    } else {
-      // use the setPersons() function to modify persons state
-      // use concat vice .push() because we don't mutate state directly in React
-      setPersons(persons.concat(contactObject));
-      setNewName('');
-    }
+    // if (persons.some((person) => person.name === newName)) {
+    //   alert(`${newName} is already added to phonebook`);
+    //   setNewName('');
+    // } else {
+    //   // use the setPersons() function to modify persons state
+    //   // use concat vice .push() because we don't mutate state directly in React
+    //   setPersons(persons.concat(contactObject));
+    //   setNewName('');
+    // }
   };
 
   // function for handling search queries
@@ -97,3 +106,5 @@ export default App;
 
 // 2.11 Modify the application such that the initial state of the data is fetched from the server using the axios-library.
 // Complete the fetching with an Effect hook.
+
+// 2.15: Currently, the numbers that are added to the phonebook are not saved to a backend server. Fix this situation.
