@@ -2,7 +2,7 @@ const PersonForm = ({addContact, handleInputName, newNumber, newName, handleInpu
 
 
     return (
-        <form onSubmit={addContact}>
+        <form onSubmit={() => addContact}>
         <h2> Add Entry </h2>
         <div>
           name: <input value={newName} onChange={handleInputName}/>

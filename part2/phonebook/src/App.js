@@ -31,22 +31,28 @@ const App = () => {
       id: persons.length + 1,
     };
 
-    axios
-      .put(localServer, contactObject)
-      .then((res) => res.data)
-      .catch((e) => console.log(e));
+    const hardCoded = {
+      name: 'tuff guy',
+      number: '12345678',
+      id: persons.length + 1,
+    };
+
+    // const postData = axios.post(localServer, hardCoded);
+    // return postData.then((res) => console.log(res.data));
 
     // check persons array for presence of duplicate name
-    // if (persons.some((person) => person.name === newName)) {
-    //   alert(`${newName} is already added to phonebook`);
-    //   setNewName('');
-    // } else {
-    //   // use the setPersons() function to modify persons state
-    //   // use concat vice .push() because we don't mutate state directly in React
-    //   setPersons(persons.concat(contactObject));
-    //   setNewName('');
-    // }
-  };
+    if (persons.some((person) => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`);
+      setNewName('');
+    } else {
+      // use the setPersons() function to modify persons state
+      // use concat vice .push() because we don't mutate state directly in React
+      setPersons(persons.concat(contactObject));
+      setNewName('');
+    }
+
+    console.log('this is persons', persons);
+  }; // end addContact
 
   // function for handling search queries
   const handleQuery = (event) => {
