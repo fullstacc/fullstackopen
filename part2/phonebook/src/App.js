@@ -20,8 +20,8 @@ const App = () => {
   const localServer = 'http://localhost:3001/persons';
 
   // function for adding contacts to the persons state
-  // TODO: send a post request to the db
   const addContact = (event) => {
+    console.log('attempting to add contact');
     // prevent page from reloading upon form submit
     event.preventDefault();
     // build an object to post to the database
@@ -30,15 +30,6 @@ const App = () => {
       number: newNumber,
       id: persons.length + 1,
     };
-
-    const hardCoded = {
-      name: 'tuff guy',
-      number: '12345678',
-      id: persons.length + 1,
-    };
-
-    // const postData = axios.post(localServer, hardCoded);
-    // return postData.then((res) => console.log(res.data));
 
     // check persons array for presence of duplicate name
     if (persons.some((person) => person.name === newName)) {
@@ -49,6 +40,10 @@ const App = () => {
       // use concat vice .push() because we don't mutate state directly in React
       setPersons(persons.concat(contactObject));
       setNewName('');
+
+      // send POST to server
+      const postData = axios.post(localServer, contactObject);
+      return postData.then((res) => console.log(res.data));
     }
 
     console.log('this is persons', persons);
@@ -66,6 +61,7 @@ const App = () => {
 
   // function for updating input field state
   const handleInputName = (event) => {
+    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
@@ -74,11 +70,8 @@ const App = () => {
   };
 
   const personFormPropsObj = {
-    addContact,
-    handleInputName,
     newNumber,
     newName,
-    handleInputNumber,
   };
 
   // initial state should be fetched from server using axios using effect hook
@@ -95,7 +88,12 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter query={query} handleQuery={handleQuery} />
-      <PersonForm propsObj={personFormPropsObj} />
+      <PersonForm
+        propsObj={personFormPropsObj}
+        addContact={addContact}
+        handleInputName={handleInputName}
+        handleInputNumber={handleInputNumber}
+      />
       <Persons showAll={showAll} query={query} persons={persons} />
     </div>
   );
