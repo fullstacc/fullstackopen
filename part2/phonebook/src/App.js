@@ -3,6 +3,7 @@ import axios from 'axios';
 import Filter from './components/Filter';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
+import personService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -42,11 +43,8 @@ const App = () => {
       setNewName('');
 
       // send POST to server
-      const postData = axios.post(localServer, contactObject);
-      return postData.then((res) => console.log(res.data));
+      personService.create(contactObject);
     }
-
-    console.log('this is persons', persons);
   }; // end addContact
 
   // function for handling search queries
@@ -76,12 +74,7 @@ const App = () => {
 
   // initial state should be fetched from server using axios using effect hook
   useEffect(() => {
-    console.log('effect');
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled');
-      // this fills the persons state array
-      setPersons(response.data);
-    });
+    personService.getAll().then((res) => setPersons(res.data));
   }, []);
 
   return (
@@ -112,3 +105,4 @@ export default App;
 // Complete the fetching with an Effect hook.
 
 // 2.15: Currently, the numbers that are added to the phonebook are not saved to a backend server. Fix this situation.
+// 2.16: Extract the code that handles the communication with the backend into its own module
