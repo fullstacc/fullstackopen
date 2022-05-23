@@ -40,7 +40,23 @@ const App = () => {
 
     // check persons array for presence of duplicate name
     if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const personToUpdate = persons.find((person) => person.name === newName);
+      if (window.confirm('Use already exists! Do you want to update number?')) {
+        personService.update(personToUpdate.id, {
+          name: newName,
+          number: newNumber,
+          id: personToUpdate.id,
+        });
+        setNewName('');
+        setPersons(
+          persons.map((person) =>
+            person.id != personToUpdate.id
+              ? person
+              : { name: newName, number: newNumber, id: personToUpdate.id }
+          )
+        );
+      }
+
       setNewName('');
     } else {
       // use the setPersons() function to modify persons state
@@ -117,8 +133,6 @@ export default App;
 // 2.17: Make it possible for users to delete entries from the phonebook.
 // The deletion can be done through a dedicated button for each person in the phonebook list.
 // You can confirm the action from the user by using the window.confirm method
-
-// -------------------------------------------------------------------------------------------
 // 2.18: Change the functionality so that if a number is added to an already existing user, the new number will replace the old number.
 // It's recommended to use the HTTP PUT method for updating the phone number.
 // If the person's information is already in the phonebook, the application can confirm the action from the user
