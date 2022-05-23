@@ -13,7 +13,16 @@ const create = (newObject) => {
   return postData;
 };
 
+const deleteUser = (personId) => {
+  const deleteUrl = `${baseUrl}/${personId}`;
+  console.log('deleteURL', deleteUrl);
+  console.log(`deleting user ${personId}`);
+  return axios.delete(deleteUrl);
+  //   axios.delete(deleteUrl).then(getAll);
+};
+
 export default {
-  getAll: getAll,
-  create: create,
+  getAll,
+  create,
+  deleteUser,
 };

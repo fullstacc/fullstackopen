@@ -18,7 +18,13 @@ const App = () => {
   // state management for the search form
   const [query, setQuery] = useState('enter query here');
 
-  const localServer = 'http://localhost:3001/persons';
+  const deleteUser = (userId) => {
+    // prompt user to confirm wish to delete
+    if (window.confirm('Do you really want to delete this user?')) {
+      personService.deleteUser(userId);
+      setPersons(persons.filter((person) => person.id !== userId));
+    }
+  };
 
   // function for adding contacts to the persons state
   const addContact = (event) => {
@@ -59,7 +65,6 @@ const App = () => {
 
   // function for updating input field state
   const handleInputName = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
@@ -87,7 +92,12 @@ const App = () => {
         handleInputName={handleInputName}
         handleInputNumber={handleInputNumber}
       />
-      <Persons showAll={showAll} query={query} persons={persons} />
+      <Persons
+        showAll={showAll}
+        query={query}
+        persons={persons}
+        deleteUser={deleteUser}
+      />
     </div>
   );
 };
@@ -100,9 +110,15 @@ export default App;
 // 2.9: Implement a search field that can be used to filter the list of people by name
 // 2.10: If you have implemented your application in a single component, refactor it by extracting suitable parts into new components.
 // Maintain the application's state and all event handlers in the App root component.
-
 // 2.11 Modify the application such that the initial state of the data is fetched from the server using the axios-library.
 // Complete the fetching with an Effect hook.
-
 // 2.15: Currently, the numbers that are added to the phonebook are not saved to a backend server. Fix this situation.
 // 2.16: Extract the code that handles the communication with the backend into its own module
+// 2.17: Make it possible for users to delete entries from the phonebook.
+// The deletion can be done through a dedicated button for each person in the phonebook list.
+// You can confirm the action from the user by using the window.confirm method
+
+// -------------------------------------------------------------------------------------------
+// 2.18: Change the functionality so that if a number is added to an already existing user, the new number will replace the old number.
+// It's recommended to use the HTTP PUT method for updating the phone number.
+// If the person's information is already in the phonebook, the application can confirm the action from the user
