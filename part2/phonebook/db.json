@@ -2,8 +2,13 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "1337",
       "id": 1
+    },
+    {
+      "name": "tony hawk",
+      "number": "1337",
+      "id": 2
     }
   ]
 }

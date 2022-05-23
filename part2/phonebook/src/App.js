@@ -40,7 +40,23 @@ const App = () => {
 
     // check persons array for presence of duplicate name
     if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const personToUpdate = persons.find((person) => person.name === newName);
+      if (window.confirm('Use already exists! Do you want to update number?')) {
+        personService.update(personToUpdate.id, {
+          name: newName,
+          number: newNumber,
+          id: personToUpdate.id,
+        });
+        setNewName('');
+        setPersons(
+          persons.map((person) =>
+            person.id != personToUpdate.id
+              ? person
+              : { name: newName, number: newNumber, id: personToUpdate.id }
+          )
+        );
+      }
+
       setNewName('');
     } else {
       // use the setPersons() function to modify persons state
