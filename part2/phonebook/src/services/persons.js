@@ -15,10 +15,7 @@ const create = (newObject) => {
 
 const deleteUser = (personId) => {
   const deleteUrl = `${baseUrl}/${personId}`;
-  console.log('deleteURL', deleteUrl);
-  console.log(`deleting user ${personId}`);
   return axios.delete(deleteUrl);
-  //   axios.delete(deleteUrl).then(getAll);
 };
 
 const update = (personId, updateObject) => {
