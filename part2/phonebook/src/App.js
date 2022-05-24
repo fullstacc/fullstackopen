@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import Filter from './components/Filter';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
+import Notification from './components/Notification';
 import personService from './services/persons';
 
 const App = () => {
@@ -18,11 +18,33 @@ const App = () => {
   // state management for the search form
   const [query, setQuery] = useState('enter query here');
 
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const updateMsg = (content) => {
+    console.log('updating error message', content);
+    setErrorMessage(content);
+    console.log('error message is now', errorMessage);
+  };
+
   const deleteUser = (userId) => {
     // prompt user to confirm wish to delete
     if (window.confirm('Do you really want to delete this user?')) {
-      personService.deleteUser(userId);
-      setPersons(persons.filter((person) => person.id !== userId));
+      personService
+        .deleteUser(userId)
+        .then(
+          updateMsg('success'),
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000),
+          setPersons(persons.filter((person) => person.id !== userId))
+        )
+        .catch((e) => {
+          setErrorMessage(`error`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+          setPersons(persons.filter((person) => person.id !== userId));
+        });
     }
   };
 
@@ -42,11 +64,18 @@ const App = () => {
     if (persons.some((person) => person.name === newName)) {
       const personToUpdate = persons.find((person) => person.name === newName);
       if (window.confirm('Use already exists! Do you want to update number?')) {
-        personService.update(personToUpdate.id, {
-          name: newName,
-          number: newNumber,
-          id: personToUpdate.id,
-        });
+        personService
+          .update(personToUpdate.id, {
+            name: newName,
+            number: newNumber,
+            id: personToUpdate.id,
+          })
+          .then(
+            updateMsg('success'),
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000)
+          );
         setNewName('');
         setPersons(
           persons.map((person) =>
@@ -65,7 +94,12 @@ const App = () => {
       setNewName('');
 
       // send POST to server
-      personService.create(contactObject);
+      personService.create(contactObject).then(
+        updateMsg('success'),
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000)
+      );
     }
   }; // end addContact
 
@@ -101,6 +135,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
       <Filter query={query} handleQuery={handleQuery} />
       <PersonForm
         propsObj={personFormPropsObj}
@@ -108,6 +143,7 @@ const App = () => {
         handleInputName={handleInputName}
         handleInputNumber={handleInputNumber}
       />
+      <Notification message={errorMessage} />
       <Persons
         showAll={showAll}
         query={query}
@@ -136,3 +172,9 @@ export default App;
 // 2.18: Change the functionality so that if a number is added to an already existing user, the new number will replace the old number.
 // It's recommended to use the HTTP PUT method for updating the phone number.
 // If the person's information is already in the phonebook, the application can confirm the action from the user
+// 2.19: Use the improved error message example from part 2 as a guide to show a notification that lasts for a few seconds
+// after a successful operation is executed (a person is added or a number is changed)
+// 2.20: Open your application in two browsers. If you delete a person in browser 1 a short while before
+// attempting to change the person's phone number in browser 2, you will get an error message
+// Modify the example so that the user is shown a message when the operation does not succeed.
+// The messages shown for successful and unsuccessful events should look different
