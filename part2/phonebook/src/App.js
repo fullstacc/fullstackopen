@@ -57,50 +57,53 @@ const App = () => {
     const contactObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     };
 
     // check persons array for presence of duplicate name
-    if (persons.some((person) => person.name === newName)) {
-      const personToUpdate = persons.find((person) => person.name === newName);
-      if (window.confirm('Use already exists! Do you want to update number?')) {
-        personService
-          .update(personToUpdate.id, {
-            name: newName,
-            number: newNumber,
-            id: personToUpdate.id,
-          })
-          .then(
-            updateMsg('success'),
-            setTimeout(() => {
-              setErrorMessage(null);
-            }, 5000)
-          );
-        setNewName('');
-        setPersons(
-          persons.map((person) =>
-            person.id != personToUpdate.id
-              ? person
-              : { name: newName, number: newNumber, id: personToUpdate.id }
-          )
-        );
-      }
+    // not required for 3.14
+    // if (persons.some((person) => person.name === newName)) {
+    //   const personToUpdate = persons.find((person) => person.name === newName);
+    //   if (window.confirm('Use already exists! Do you want to update number?')) {
+    //     personService
+    //       .update(personToUpdate.id, {
+    //         name: newName,
+    //         number: newNumber,
+    //         id: personToUpdate.id,
+    //       })
+    //       .then(
+    //         updateMsg('success'),
+    //         setTimeout(() => {
+    //           setErrorMessage(null);
+    //         }, 5000)
+    //       );
+    //     setNewName('');
+    //     setPersons(
+    //       persons.map((person) =>
+    //         person.id != personToUpdate.id
+    //           ? person
+    //           : { name: newName, number: newNumber, id: personToUpdate.id }
+    //       )
+    //     );
+    //   }
 
-      setNewName('');
-    } else {
-      // use the setPersons() function to modify persons state
-      // use concat vice .push() because we don't mutate state directly in React
-      setPersons(persons.concat(contactObject));
-      setNewName('');
+    //   setNewName('');
+    // }
+    // from commented out if statement above
+    // else {
 
-      // send POST to server
-      personService.create(contactObject).then(
-        updateMsg('success'),
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000)
-      );
-    }
+    // use the setPersons() function to modify persons state
+    // use concat vice .push() because we don't mutate state directly in React
+    setPersons(persons.concat(contactObject));
+    setNewName('');
+
+    // send POST to server
+    personService.create(contactObject).then(
+      updateMsg('success'),
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000)
+    );
+    // } // end else from duplicate chjeck
   }; // end addContact
 
   // function for handling search queries
