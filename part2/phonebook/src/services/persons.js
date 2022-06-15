@@ -22,10 +22,15 @@ const deleteUser = (personId) => {
   return axios.delete(deleteUrl);
 };
 
+// used when need to update an existing person entry
 const update = (personId, updateObject) => {
   console.log(`person id is ${personId}`);
+  console.log('this is from the phonebook updateobject', updateObject);
+  // sends to url with unique id
   const updateUrl = `${baseUrl}/${personId}`;
+  console.log('update url is', updateUrl);
   console.log(`updating user ${personId}`);
+  console.log('sending update to', updateUrl);
   return axios.put(updateUrl, updateObject);
 };
 
