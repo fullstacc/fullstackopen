@@ -75,7 +75,6 @@ const App = () => {
             .update(personToUpdate.id, {
               name: newName,
               number: newNumber,
-              id: personToUpdate.id,
             })
             .then(
               updateMsg('success'),
@@ -95,20 +94,21 @@ const App = () => {
 
         setNewName('');
       } // end duplicate found
+      // no duplicate found
+      else {
+        // use the setPersons() function to modify persons state
+        // use concat vice .push() because we don't mutate state directly in React
+        setPersons(persons.concat(contactObject));
+        setNewName('');
 
-      // use the setPersons() function to modify persons state
-      // use concat vice .push() because we don't mutate state directly in React
-      setPersons(persons.concat(contactObject));
-      setNewName('');
-
-      // send POST to server
-      personService.create(contactObject).then(
-        updateMsg('success'),
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000)
-      );
-      // } // end else from duplicate chjeck
+        // send POST to server
+        personService.create(contactObject).then(
+          updateMsg('success'),
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000)
+        );
+      }
     } else {
       window
         .alert("please ensure you've entered a full name and contact number")
