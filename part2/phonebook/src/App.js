@@ -110,9 +110,9 @@ const App = () => {
         );
       }
     } else {
-      window
-        .alert("please ensure you've entered a full name and contact number")
-        .then(setNewName(''));
+      window.alert(
+        "please ensure you've entered a full name and contact number"
+      );
     }
   }; // end addContact
 

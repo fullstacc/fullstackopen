@@ -1,6 +1,12 @@
 .DS_Store
+# keys
+.env 
 
 # node stuff
 */node_modules/
 node_modules/
 */webserver/
+
+# tutorial folders
+part2-notes/
+backend/
