@@ -12,8 +12,8 @@ const App = () => {
   const [showAll, setShowAll] = useState(true);
 
   // The newName state is meant for controlling the form input element.
-  const [newName, setNewName] = useState('enter name here');
-  const [newNumber, setNewNumber] = useState('enter number here');
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
 
   // state management for the search form
   const [query, setQuery] = useState('enter query here');
@@ -50,60 +50,70 @@ const App = () => {
 
   // function for adding contacts to the persons state
   const addContact = (event) => {
-    console.log('attempting to add contact');
-    // prevent page from reloading upon form submit
-    event.preventDefault();
-    // build an object to post to the database
-    const contactObject = {
-      name: newName,
-      number: newNumber,
-    };
+    // ensure the input has at least 1 char for name and number
+    // there is a smarter way to do this with libraries but will get back
+    // to this later.
+    if (newName.length > 1 && newNumber.length > 1) {
+      console.log('attempting to add contact');
+      // prevent page from reloading upon form submit
+      event.preventDefault();
+      // build an object to post to the database
+      const contactObject = {
+        name: newName,
+        number: newNumber,
+      };
 
-    // check persons array for presence of duplicate name
-    // not required for 3.14
-    // if (persons.some((person) => person.name === newName)) {
-    //   const personToUpdate = persons.find((person) => person.name === newName);
-    //   if (window.confirm('Use already exists! Do you want to update number?')) {
-    //     personService
-    //       .update(personToUpdate.id, {
-    //         name: newName,
-    //         number: newNumber,
-    //         id: personToUpdate.id,
-    //       })
-    //       .then(
-    //         updateMsg('success'),
-    //         setTimeout(() => {
-    //           setErrorMessage(null);
-    //         }, 5000)
-    //       );
-    //     setNewName('');
-    //     setPersons(
-    //       persons.map((person) =>
-    //         person.id != personToUpdate.id
-    //           ? person
-    //           : { name: newName, number: newNumber, id: personToUpdate.id }
-    //       )
-    //     );
-    //   }
+      // check persons array for presence of duplicate name
+      if (persons.some((person) => person.name === newName)) {
+        const personToUpdate = persons.find(
+          (person) => person.name === newName
+        );
+        if (
+          window.confirm('Use already exists! Do you want to update number?')
+        ) {
+          personService
+            .update(personToUpdate.id, {
+              name: newName,
+              number: newNumber,
+            })
+            .then(
+              updateMsg('success'),
+              setTimeout(() => {
+                setErrorMessage(null);
+              }, 5000)
+            );
+          setNewName('');
+          setPersons(
+            persons.map((person) =>
+              person.id != personToUpdate.id
+                ? person
+                : { name: newName, number: newNumber, id: personToUpdate.id }
+            )
+          );
+        } // end dialog -> ok
 
-    //   setNewName('');
-    // }
-    // from commented out if statement above
-    // else {
+        setNewName('');
+      } // end duplicate found
+      // no duplicate found
+      else {
+        // use the setPersons() function to modify persons state
+        // use concat vice .push() because we don't mutate state directly in React
+        setPersons(persons.concat(contactObject));
+        setNewName('');
 
-    // use the setPersons() function to modify persons state
-    // use concat vice .push() because we don't mutate state directly in React
-    setPersons(persons.concat(contactObject));
-    setNewName('');
-
-    // send POST to server
-    personService.create(contactObject).then(
-      updateMsg('success'),
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000)
-    );
-    // } // end else from duplicate chjeck
+        // send POST to server
+        personService.create(contactObject).then(
+          updateMsg('success'),
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000)
+        );
+      }
+    } else {
+      window.alert(
+        "please ensure you've entered a full name and contact number"
+      );
+    }
   }; // end addContact
 
   // function for handling search queries
